@@ -1,0 +1,24 @@
+#cloud-config
+write_files:
+ - path: /etc/server.conf
+ owner: root:root
+ permissions: "0644"
+ content: |
+ {
+ "user": "${user}",
+ "password": "${password}",
+ "database": "${database}",
+ "netloc": "${hostname}:${port}"
+ }
+runcmd:
+ - curl -sL https://api.github.com/repos/terraform-in-action/vanilla-webserver-src/releases/latest | jq -r ".assets[].browser_download_url" | wget -qi - 
+ - unzip deployment.zip
+ - ./deployment/server
+Listing 4.18 cloud_config.yaml
+The load balancer listens on 
+port 80, which is mapped 
+to 8080 on the instance.Deploying the web application 99
+packages:
+ - jq
+ - wget
+ - unzip 
